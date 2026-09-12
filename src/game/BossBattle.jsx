@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { AnimatePresence, motion } from 'framer-motion';
+import { processQuestEvent } from './questLogic';
 
 export function BossBattle({ open, onClose, bossName = 'Loop Warden', onProfileUpdate }) {
   const [boss, setBoss] = useState(null);
@@ -102,6 +103,14 @@ export function BossBattle({ open, onClose, bossName = 'Loop Warden', onProfileU
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (loading || result || victory || !activeChallenge) return;
+    
+    // Trigger game progression for quests silently in background
+    processQuestEvent('code_submitted', code).then(didComplete => {
+      if (didComplete && onProfileUpdate) {
+        onProfileUpdate(); // Update HUD (XP/Coins)
+      }
+    });
+
     await submitAnswer(code);
   };
 

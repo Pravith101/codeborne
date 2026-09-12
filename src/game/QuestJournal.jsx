@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { AnimatePresence, motion } from 'framer-motion';
 
-export function QuestJournal({ open, onClose, onTaskCompleted }) {
+export function QuestJournal({ open, onClose }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,21 +33,7 @@ export function QuestJournal({ open, onClose, onTaskCompleted }) {
     return () => { active = false; };
   }, [open]);
 
-  const handleComplete = async (taskId) => {
-    if (loading) return;
-    try {
-      const { error } = await supabase.rpc('complete_task', { p_task_id: taskId });
-      if (error) throw error;
-      
-      setTasks(prev => prev.map(t => t.id === taskId ? { ...t, completed: true } : t));
-      
-      if (onTaskCompleted) {
-        onTaskCompleted();
-      }
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+
 
 
 
@@ -97,7 +83,7 @@ export function QuestJournal({ open, onClose, onTaskCompleted }) {
                             <span>◉ {task.coin_reward}</span>
                           </span>
                           {!task.completed ? (
-                            <button onClick={() => handleComplete(task.id)} disabled={loading}>Complete</button>
+                            <span className="quest-active-mark">Active</span>
                           ) : (
                             <span className="quest-done-mark">Completed</span>
                           )}
