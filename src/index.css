@@ -193,3 +193,25 @@
 
 .player-armor { position: absolute; inset: 6px 2px; background: #556; border-top: 2px solid #778; z-index: 2; pointer-events: none; }
 .player-armor.armor-python { background: #2a423a; border-top: 2px solid #4a725a; box-shadow: inset 0 -4px #1a221a; }
+
+/* Bottom HUD Overrides */
+.bottom-hud { position: absolute; z-index: 30; bottom: 15px; right: 15px; display: flex; gap: 12px; align-items: center; }
+.movement-hint { display: flex; gap: 8px; align-items: center; padding: 7px 9px; background: rgba(12,25,17,.8); border: 1px solid rgba(235,211,162,.2); color: rgba(242,224,192,.73); font-size: 8px; letter-spacing: .05em; text-transform: uppercase; }
+.movement-hint i { width: 1px; height: 12px; background: rgba(235,211,162,.27); }
+.movement-hint kbd { padding: 1px 4px; border: 1px solid rgba(244,225,189,.4); border-radius: 2px; color: #f3b56d; font: inherit; }
+.action-buttons { display: flex; gap: 8px; }
+.action-buttons button { display: flex; align-items: center; gap: 6px; padding: 7px 9px; background: rgba(12,25,17,.85); border: 1px solid rgba(237,213,165,.32); color: rgba(242,224,192,.9); font: 8px "DM Mono", monospace; letter-spacing: .07em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+.action-buttons button kbd { padding: 1px 4px; border: 1px solid rgba(244,225,189,.4); border-radius: 2px; color: #f3b56d; background: rgba(0,0,0,.2); font: inherit; }
+.action-buttons button:hover { border-color: #e28d4c; color: #f5c17b; background: rgba(20,35,25,.95); }
+
+@media(max-width: 620px) {
+  .bottom-hud { right: 9px; bottom: 9px; left: 9px; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .movement-hint { display: none; }
+  .action-buttons { width: 100%; justify-content: space-between; gap: 4px; }
+  .action-buttons button { flex: 1; justify-content: center; }
+}
+
+/* Shop Error State */
+.shop-error-state { padding: 24px; text-align: center; color: #a69888; display: flex; flex-direction: column; gap: 8px; justify-content: center; align-items: center; min-height: 200px; }
+.shop-error-state p { font: 600 16px "Fraunces", serif; color: #e88e8e; margin: 0; text-shadow: 1px 1px 0 rgba(0,0,0,0.5); }
+.shop-error-state small { font: 12px "DM Mono", monospace; color: #8a3f3f; max-width: 400px; background: rgba(42, 16, 16, 0.4); padding: 8px; border-radius: 4px; }

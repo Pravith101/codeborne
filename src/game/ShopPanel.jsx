@@ -88,10 +88,14 @@ export function ShopPanel({ open, onClose, profile, onProfileUpdate, onCosmetics
               <button className="shop-close" onClick={onClose} aria-label="Close Shop">×</button>
             </div>
             
-            {error && <div className="shop-error">{error}</div>}
-            
-            <div className="shop-grid">
-              {cosmetics.map(item => {
+            {error ? (
+              <div className="shop-error-state">
+                <p>The merchant is currently unavailable.</p>
+                <small>{error}</small>
+              </div>
+            ) : (
+              <div className="shop-grid">
+                {cosmetics.map(item => {
                 const ownership = userCosmetics.find(uc => uc.cosmetic_id === item.id);
                 const isOwned = !!ownership;
                 const isEquipped = ownership?.equipped;
@@ -128,6 +132,7 @@ export function ShopPanel({ open, onClose, profile, onProfileUpdate, onCosmetics
                 );
               })}
             </div>
+            )}
           </motion.section>
         </motion.div>
       )}

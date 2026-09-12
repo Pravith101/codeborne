@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import { supabase, supabaseConfigurationError } from '../../lib/supabaseClient'
 
 const wait = (milliseconds) => new Promise((resolve) => window.setTimeout(resolve, milliseconds))
@@ -8,6 +8,7 @@ export function useAuth() {
   const [profile, setProfile] = useState(null)
   const [status, setStatus] = useState(() => (supabase ? 'loading' : 'unauthenticated'))
   const [profileError, setProfileError] = useState(null)
+  const lastUserId = useRef(null)
 
   const loadProfile = useCallback(async (userId) => {
     if (!supabase) return
@@ -29,13 +30,19 @@ export function useAuth() {
     supabase.auth.getSession().then(({ data, error }) => {
       if (!active) return
       if (error) { setProfileError(error.message); setStatus('unauthenticated'); return }
+      const newUserId = data.session?.user?.id;
+      lastUserId.current = newUserId;
       setSession(data.session)
       setStatus(data.session ? 'loading-profile' : 'unauthenticated')
     })
     const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      const newUserId = nextSession?.user?.id;
+      if (lastUserId.current !== newUserId) {
+        lastUserId.current = newUserId;
+        setProfile(null)
+        setStatus(nextSession ? 'loading-profile' : 'unauthenticated')
+      }
       setSession(nextSession)
-      setProfile(null)
-      setStatus(nextSession ? 'loading-profile' : 'unauthenticated')
     })
     return () => { active = false; listener.subscription.unsubscribe() }
   }, [])
