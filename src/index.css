@@ -94,3 +94,54 @@
 .gate-status { margin: 15px 0 25px; font: 600 14px "Unbounded", sans-serif; letter-spacing: .15em; }
 .gate-status.locked { color: #dc7453; }
 .gate-status.unlocked { color: #a3c983; text-shadow: 0 0 12px rgba(163,201,131,.4); }
+
+/* Boss Sprite */
+.boss-sprite { position: absolute; z-index: 10; width: 40px; height: 40px; transform: translate(-50%, -50%); }
+.boss-sprite.nearby .boss-aura { opacity: 0.9; transform: scale(1.15); }
+.boss-aura { position: absolute; inset: -15px; background: radial-gradient(circle, rgba(160,80,200,.3), transparent 70%); animation: pulse 2s infinite alternate; transition: all 0.3s; }
+.boss-body { position: absolute; inset: 0; background: #3b2a45; border: 4px solid #251b2c; clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%); }
+.boss-sprite span { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 8px; color: #d4c09a; white-space: nowrap; text-shadow: 1px 1px #000; }
+@keyframes pulse { to { transform: scale(1.1); opacity: 0.7; } }
+
+/* Boss Battle Panel */
+.boss-battle-backdrop { position: absolute; z-index: 70; inset: 0; background: rgba(8,12,10,.8); display: grid; place-items: center; padding: 20px; }
+.boss-battle-panel { width: min(100%, 720px); max-height: 90vh; background: #120e14; border: 2px solid #5a3e66; box-shadow: 0 10px 40px rgba(0,0,0,.8), inset 0 0 30px rgba(45,30,55,.5); color: #eadbbd; display: flex; flex-direction: column; overflow: hidden; }
+.boss-header { padding: 16px 24px; background: #1c1521; border-bottom: 2px solid #3b2a45; display: flex; justify-content: space-between; align-items: center; }
+.boss-name-wrap h2 { margin: 0; color: #e5c3ea; font: 600 24px/1 "Fraunces", serif; letter-spacing: 1px; }
+.boss-region { font-size: 10px; color: #a58ba9; text-transform: uppercase; letter-spacing: .1em; }
+.boss-hp-bar { width: 220px; height: 18px; border: 2px solid #3b2a45; background: #0c080d; position: relative; }
+.boss-hp-fill { height: 100%; background: linear-gradient(90deg, #8a2a2a, #d44d4d); transition: width 0.4s ease; }
+.boss-hp-text { position: absolute; inset: 0; display: grid; place-items: center; font: 600 10px "DM Mono", monospace; color: #fff; text-shadow: 1px 1px 2px #000; }
+.boss-arena { padding: 24px; flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+.boss-loading { text-align: center; color: #a58ba9; font-style: italic; }
+.challenge-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; border-bottom: 1px dashed #3b2a45; padding-bottom: 12px; }
+.challenge-title h4 { margin: 0; color: #f4e1bd; font: 500 16px "Fraunces", serif; }
+.challenge-title span { font-size: 10px; color: #c4a173; text-transform: uppercase; }
+.challenge-timer { font-size: 12px; color: #a3c983; letter-spacing: .1em; }
+.challenge-timer.urgent { color: #dc7453; animation: pulse 1s infinite alternate; }
+.challenge-timer b { font-size: 18px; }
+.challenge-prompt { font: 14px/1.5 "Fraunces", serif; color: #d6cfb8; margin: 0 0 20px; }
+.challenge-form { display: flex; flex-direction: column; gap: 16px; flex: 1; }
+.challenge-editor { flex: 1; min-height: 160px; background: #0a080c; border: 1px solid #483452; padding: 12px; color: #f3e2bf; font: 14px/1.5 "DM Mono", monospace; resize: none; }
+.challenge-editor:focus { outline: 1px solid #8c60a3; }
+.challenge-actions { display: flex; justify-content: space-between; align-items: center; }
+.challenge-submit { padding: 12px 24px; background: #c65d35; border: 1px solid #e28d4c; color: #17140f; font: 600 14px "Unbounded", sans-serif; cursor: pointer; }
+.challenge-submit:hover:not(:disabled) { background: #e07646; }
+.challenge-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+.challenge-flee { background: none; border: none; color: #a58ba9; cursor: pointer; font: 12px "DM Mono", monospace; text-transform: uppercase; }
+.challenge-flee:hover { color: #d6cfb8; }
+.challenge-result { display: flex; flex-direction: column; align-items: center; gap: 12px; background: #121014; border: 1px solid #3b2a45; padding: 20px; }
+.result-tier { font: 600 24px "Unbounded", sans-serif; letter-spacing: 2px; }
+.tier-perfect { color: #a3c983; text-shadow: 0 0 10px rgba(163,201,131,.5); }
+.tier-good { color: #f5c17b; }
+.tier-partial { color: #d4a373; }
+.tier-wrong, .tier-defeated { color: #dc7453; }
+.result-damage { font-size: 14px; color: #d6cfb8; }
+.challenge-next { padding: 8px 16px; background: #2b1f33; border: 1px solid #483452; color: #e5c3ea; cursor: pointer; }
+.challenge-next:hover { background: #3b2a45; }
+.boss-victory { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; }
+.victory-title { margin: 0; color: #f2ca84; font: 600 36px "Unbounded", sans-serif; letter-spacing: 3px; text-shadow: 0 0 20px rgba(242,202,132,.4); }
+.victory-subtitle { margin: 10px 0 30px; color: #c4a173; font-size: 14px; letter-spacing: 4px; }
+.victory-rewards { display: flex; gap: 24px; margin-bottom: 40px; font: 600 18px "DM Mono", monospace; color: #a3c983; }
+.victory-btn { padding: 12px 30px; background: #c4a173; border: none; color: #1a1511; font: 600 14px "Unbounded", sans-serif; cursor: pointer; }
+.victory-btn:hover { background: #d4b58c; }

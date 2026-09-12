@@ -2,6 +2,7 @@ export const WORLD = { width: 2400, height: 1500, playerSize: 28 }
 export const START_POSITION = { x: 1040, y: 860 }
 export const NPC = { id: 'eldra', name: 'Eldra', x: 1370, y: 790, size: 28 }
 export const GATE = { x: 2180, y: 620, width: 92, height: 220 }
+export const BOSS = { id: 'loop-warden', x: 1200, y: 200, size: 40 }
 // Compact scenery collision: visual detail layers are intentionally walkable.
 export const OBSTACLES = [
   { x: 470, y: 355, width: 190, height: 145 }, { x: 1015, y: 520, width: 205, height: 152 }, { x: 1695, y: 390, width: 210, height: 145 }, { x: 255, y: 1050, width: 146, height: 112 }, { x: 2075, y: 490, width: 185, height: 410 },
