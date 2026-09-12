@@ -1,8 +1,11 @@
 import { supabase } from '../lib/supabaseClient';
 
 /**
- * Game-driven quest progression mechanism.
- * quest event -> check active quests -> verify objective -> complete matching quest
+ * Event-based quest progression layer.
+ * 
+ * Example usage:
+ * processQuestEvent("coding_challenge_completed", { challengeKey: "echoes_of_forest", success: true })
+ * processQuestEvent("boss_defeated", { bossName: "Loop Warden" })
  */
 export async function processQuestEvent(eventType, eventData) {
   try {
@@ -18,22 +21,22 @@ export async function processQuestEvent(eventType, eventData) {
     
     // 2. Verify objective against game event
     for (const quest of activeQuests) {
-      if (eventType === 'code_submitted') {
-        const code = (eventData || '').toLowerCase().replace(/\s+/g, '');
-        
-        if (quest.topic === 'Variables' && code.includes('=')) {
-          questsToComplete.push(quest.id);
-        } else if (quest.topic === 'Input & Output' && code.includes('print(')) {
-          questsToComplete.push(quest.id);
-        } else if (quest.topic === 'if / elif / else' && code.includes('if')) {
+      if (eventType === 'coding_challenge_completed' && eventData.success) {
+        if (quest.objective_type === 'coding_challenge' && quest.objective_key === eventData.challengeKey) {
           questsToComplete.push(quest.id);
         }
       }
+      
+      // Example of a verifiable event:
+      // if (eventType === 'boss_defeated' && quest.objective_type === 'boss_defeat') {
+      //   questsToComplete.push(quest.id);
+      // }
     }
 
     // 3. Complete matching quests securely via RPC
     let completedAny = false;
     for (const questId of questsToComplete) {
+      // The complete_task RPC must authoritatively verify these completions
       const { error: completeErr } = await supabase.rpc('complete_task', { p_task_id: questId });
       if (!completeErr) {
         completedAny = true;

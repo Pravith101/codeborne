@@ -81,6 +81,15 @@ export function BossBattle({ open, onClose, bossName = 'Loop Warden', onProfileU
         setVictory(true);
         if (onProfileUpdate) onProfileUpdate();
       }
+      
+      // Emit quest event after receiving server response
+      const success = data.tier === 'PERFECT' || data.tier === 'GOOD';
+      processQuestEvent('coding_challenge_completed', {
+        challengeKey: activeChallenge.objective_key,
+        success: success
+      }).then(didComplete => {
+        if (didComplete && onProfileUpdate) onProfileUpdate();
+      });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -104,13 +113,6 @@ export function BossBattle({ open, onClose, bossName = 'Loop Warden', onProfileU
     e.preventDefault();
     if (loading || result || victory || !activeChallenge) return;
     
-    // Trigger game progression for quests silently in background
-    processQuestEvent('code_submitted', code).then(didComplete => {
-      if (didComplete && onProfileUpdate) {
-        onProfileUpdate(); // Update HUD (XP/Coins)
-      }
-    });
-
     await submitAnswer(code);
   };
 
