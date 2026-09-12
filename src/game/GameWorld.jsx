@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { GATE, NPC, OBSTACLES, ROCKS, START_POSITION, TREES, WORLD } from './worldData'
+import { FLOWERS, GATE, NPC, OBSTACLES, ROCKS, SHRUBS, START_POSITION, TREES, WORLD } from './worldData'
 import { Player } from './Player'
 import { Npc } from './Npc'
 
@@ -13,8 +13,10 @@ function isBlocked(x, y) {
 }
 
 function Building({ x, y, variant = '' }) { return <div className={`building ${variant}`} style={{ left: x, top: y }} aria-hidden="true"><i className="roof" /><i className="chimney" /><i className="wall"><b /><b /></i><i className="door" /></div> }
-function Tree({ x, y }) { return <div className="tree" style={{ left: x, top: y }} aria-hidden="true"><i /><b /><em /></div> }
+function Tree({ x, y, variant }) { return <div className={`tree tree-${variant}`} style={{ left: x, top: y }} aria-hidden="true"><i /><b /><em /></div> }
 function Rock({ x, y }) { return <div className="rock" style={{ left: x, top: y }} aria-hidden="true"><i /></div> }
+function Flower({ x, y, variant }) { return <span className={`flower flower-${variant}`} style={{ left: x, top: y }} aria-hidden="true" /> }
+function Shrub({ x, y, variant }) { return <span className={`shrub shrub-${variant}`} style={{ left: x, top: y }} aria-hidden="true" /> }
 function Campfire() { return <div className="campfire" style={{ left: 1170, top: 790 }} aria-label="Campfire"><i /><b /><span /><em /></div> }
 function Gate() { return <div className="gate-area" style={{ left: GATE.x, top: GATE.y }} aria-label="Locked gate to an unknown region"><div className="gate-pillars"><i /><i /></div><div className="gate-bars"><b /><b /><b /><b /></div><span>SEALED</span><small>Syntax Wilds</small></div> }
 
@@ -57,5 +59,5 @@ export function GameWorld({ onInteract, dialogueOpen }) {
     frame = requestAnimationFrame(tick); return () => cancelAnimationFrame(frame)
   }, [dialogueOpen])
 
-  return <div ref={viewportRef} className="game-viewport" tabIndex="0" aria-label="Starting Village game world. Use WASD or arrow keys to move. Press E to interact with Eldra."><div className="world" style={{ width: WORLD.width, height: WORLD.height, transform: `translate3d(${-cameraX}px, ${-cameraY}px, 0)` }}><div className="world-label"><span>01</span><div><b>Starting Village</b><small>The Ashen Clearing</small></div></div><div className="path path-main" /><div className="path path-west" /><div className="path path-south" /><div className="pond" /><div className="fog fog-one" /><div className="fog fog-two" /><Building x={440} y={285} /><Building x={1025} y={380} variant="building-tall" /><Building x={1700} y={255} variant="building-wide" /><Building x={175} y={1040} variant="building-small" />{TREES.map(([x, y]) => <Tree key={`${x}-${y}`} x={x} y={y} />)}{ROCKS.map(([x, y]) => <Rock key={`${x}-${y}`} x={x} y={y} />)}<Campfire /><Gate /><Npc npc={NPC} isNearby={isNearby && !dialogueOpen} /><Player position={playerPosition} /></div></div>
+  return <div ref={viewportRef} className="game-viewport" tabIndex="0" aria-label="Starting Village game world. Use WASD or arrow keys to move. Press E to interact with Eldra."><div className="world" style={{ width: WORLD.width, height: WORLD.height, transform: `translate3d(${-cameraX}px, ${-cameraY}px, 0)` }}><div className="world-label"><span>01</span><div><b>Starting Village</b><small>The Ashen Clearing</small></div></div><div className="path path-main" /><div className="path path-west" /><div className="path path-south" /><div className="path path-north" /><div className="pond" /><div className="fog fog-one" /><div className="fog fog-two" /><Building x={470} y={355} /><Building x={1015} y={520} variant="building-tall" /><Building x={1695} y={390} variant="building-wide" /><Building x={255} y={1050} variant="building-small" />{FLOWERS.map(([x, y], index) => <Flower key={`${x}-${y}`} x={x} y={y} variant={index % 3} />)}{SHRUBS.map(([x, y], index) => <Shrub key={`${x}-${y}`} x={x} y={y} variant={index % 2} />)}{TREES.map(([x, y], index) => <Tree key={`${x}-${y}`} x={x} y={y} variant={index % 3} />)}{ROCKS.map(([x, y]) => <Rock key={`${x}-${y}`} x={x} y={y} />)}<Campfire /><Gate /><Npc npc={NPC} isNearby={isNearby && !dialogueOpen} /><Player position={playerPosition} /></div></div>
 }
