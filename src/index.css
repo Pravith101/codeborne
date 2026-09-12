@@ -145,3 +145,51 @@
 .victory-rewards { display: flex; gap: 24px; margin-bottom: 40px; font: 600 18px "DM Mono", monospace; color: #a3c983; }
 .victory-btn { padding: 12px 30px; background: #c4a173; border: none; color: #1a1511; font: 600 14px "Unbounded", sans-serif; cursor: pointer; }
 .victory-btn:hover { background: #d4b58c; }
+
+/* Shop Panel */
+.shop-backdrop { position: absolute; z-index: 60; inset: 0; background: rgba(8,12,10,.85); display: grid; place-items: center; padding: 20px; }
+.shop-panel { width: min(100%, 800px); max-height: 90vh; background: #1a1511; border: 2px solid #c4a173; box-shadow: 0 15px 40px rgba(0,0,0,.9), inset 0 0 40px rgba(196,161,115,.1); display: flex; flex-direction: column; color: #d6cfb8; overflow: hidden; }
+.shop-header { padding: 20px 24px; background: #14100c; border-bottom: 1px solid #3c3024; display: flex; justify-content: space-between; align-items: center; }
+.shop-header h2 { margin: 0; color: #f2ca84; font: 600 22px "Fraunces", serif; letter-spacing: 2px; text-shadow: 1px 1px 0 #000; }
+.shop-coins { font: 600 18px "DM Mono", monospace; color: #f5c17b; display: flex; align-items: center; gap: 8px; }
+.shop-close { background: none; border: none; color: #a69888; font-size: 28px; cursor: pointer; line-height: 1; padding: 0; }
+.shop-close:hover { color: #f2ca84; }
+.shop-error { padding: 12px; background: #4a1f1f; color: #e88e8e; text-align: center; font-size: 14px; border-bottom: 1px solid #2a1010; }
+.shop-grid { padding: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; overflow-y: auto; flex: 1; }
+.shop-card { background: #221d18; border: 1px solid #3c3024; padding: 16px; display: flex; flex-direction: column; position: relative; transition: border-color 0.2s; }
+.shop-card:hover { border-color: #5a4a3a; }
+.shop-card.owned { border-color: #5a6e46; background: #1c2218; }
+.shop-card.equipped { border-color: #a3c983; box-shadow: inset 0 0 20px rgba(163,201,131,.1); }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.card-header h4 { margin: 0; color: #eadbbd; font: 500 16px "Fraunces", serif; }
+.card-type { font-size: 10px; color: #a69888; text-transform: uppercase; background: #14100c; padding: 2px 6px; border: 1px solid #3c3024; }
+.card-desc { font: 14px/1.5 "DM Mono", monospace; color: #b6ad98; margin: 0 0 20px; flex: 1; }
+.card-actions { display: flex; gap: 10px; }
+.btn-buy, .btn-equip { flex: 1; padding: 10px; font: 600 12px "Unbounded", sans-serif; border: 1px solid transparent; cursor: pointer; text-align: center; }
+.btn-buy { background: #3c3024; color: #f5c17b; border-color: #5a4a3a; }
+.btn-buy:hover:not(:disabled) { background: #5a4a3a; color: #f2ca84; }
+.btn-buy.disabled { background: #1a1511; color: #5a4a3a; cursor: not-allowed; border-color: #2a2015; }
+.btn-equip { background: #1a1511; color: #a3c983; border-color: #3d4a2f; }
+.btn-equip:hover { background: #2a3320; }
+.btn-equip.is-equipped { background: #a3c983; color: #14100c; }
+.shop-toggle-button { position: absolute; bottom: 20px; right: 180px; z-index: 50; padding: 10px 16px; background: #1a1511; border: 2px solid #5a4a3a; color: #e5c3ea; font: 600 12px "Unbounded", sans-serif; text-transform: uppercase; cursor: pointer; box-shadow: 2px 2px 0 rgba(0,0,0,.5); }
+.shop-toggle-button:hover { background: #2a221c; border-color: #7a6a5a; }
+
+/* Cosmetic Visuals on Player */
+.player-aura { position: absolute; inset: -10px; border-radius: 50%; z-index: 0; pointer-events: none; }
+.player-aura.aura-ember { background: radial-gradient(circle, rgba(200,80,40,.4), transparent 60%); animation: emberPulse 2s infinite alternate; }
+@keyframes emberPulse { to { transform: scale(1.2); opacity: 0.6; } }
+
+.player-cloak.cloak-wanderer { background: #4a3c2a; }
+.player-cloak.cloak-wanderer::after { background: #3a2c1a; }
+
+.player-cloak.cloak-verdant { background: #3a5c3a; }
+.player-cloak.cloak-verdant::after { background: #2a4c2a; box-shadow: 0 4px #1a3c1a; }
+
+.player-hood.head-scholar { background: #1f2233; border-radius: 4px 4px 0 0; }
+.player-face.head-scholar::after { background: #111; }
+
+.player-face.head-crown::before { content: ""; position: absolute; top: -6px; left: 0; width: 100%; height: 4px; background: #e2b842; box-shadow: 0 -2px #f2ca84, 2px -2px #f2ca84, -2px -2px #f2ca84; z-index: 10; }
+
+.player-armor { position: absolute; inset: 6px 2px; background: #556; border-top: 2px solid #778; z-index: 2; pointer-events: none; }
+.player-armor.armor-python { background: #2a423a; border-top: 2px solid #4a725a; box-shadow: inset 0 -4px #1a221a; }
