@@ -1,13 +1,30 @@
 import { useCallback, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { AuthScreen } from './features/auth/AuthScreen'
+import { useAuth } from './features/auth/useAuth'
+import { supabaseConfigurationError } from './lib/supabaseClient'
 import { Dialogue } from './game/Dialogue'
 import { GameWorld } from './game/GameWorld'
 import { Hud } from './game/Hud'
 import './index.css'
 
-function App() {
+function LoadingScreen({ message }) {
+  return <main className="auth-shell"><div className="auth-stars" aria-hidden="true" /><section className="auth-panel auth-loading" aria-live="polite"><div className="auth-mark" aria-hidden="true">&lt;/&gt;</div><p className="auth-brand">CODEBORNE</p><p>{message}</p></section></main>
+}
+
+function Village({ profile, onLogout }) {
   const [dialogueOpen, setDialogueOpen] = useState(false)
+  const [logoutError, setLogoutError] = useState(null)
   const openDialogue = useCallback(() => setDialogueOpen(true), [])
-  return <main className="game-shell"><GameWorld onInteract={openDialogue} dialogueOpen={dialogueOpen} /><Hud /><motion.div className="control-hint" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}><span><kbd>WASD</kbd> / <kbd>↑↓←→</kbd> Move</span><i /><span><kbd>E</kbd> Interact</span></motion.div><AnimatePresence>{!dialogueOpen && <motion.p className="world-status" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>The village is quiet. A distant gate hums beyond the trees.</motion.p>}</AnimatePresence><Dialogue open={dialogueOpen} onClose={() => setDialogueOpen(false)} /></main>
+  const logout = async () => { try { setLogoutError(null); await onLogout() } catch (error) { setLogoutError(error.message) } }
+  return <main className="game-shell"><GameWorld onInteract={openDialogue} dialogueOpen={dialogueOpen} /><Hud profile={profile} /><button type="button" className="logout-button" onClick={logout}>Leave realm</button>{logoutError && <p className="logout-error" role="alert">{logoutError}</p>}<motion.div className="control-hint" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}><span><kbd>WASD</kbd> / <kbd>↑↓←→</kbd> Move</span><i /><span><kbd>E</kbd> Interact</span></motion.div><AnimatePresence>{!dialogueOpen && <motion.p className="world-status" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>The village is quiet. A distant gate hums beyond the trees.</motion.p>}</AnimatePresence><Dialogue open={dialogueOpen} onClose={() => setDialogueOpen(false)} /></main>
+}
+
+function App() {
+  const { profile, profileError, signOut, status, submitAuth, retryProfile } = useAuth()
+  if (status === 'loading' || status === 'loading-profile') return <LoadingScreen message={status === 'loading' ? 'Listening for the old magic…' : 'Binding your character to the realm…'} />
+  if (status === 'profile-error') return <main className="auth-shell"><div className="auth-stars" aria-hidden="true" /><section className="auth-panel auth-loading"><p className="auth-brand">CODEBORNE</p><p className="auth-feedback auth-error" role="alert">{profileError}</p><button className="auth-submit" type="button" onClick={retryProfile}>Try again</button></section></main>
+  if (status === 'unauthenticated') return <AuthScreen onSubmit={submitAuth} configurationError={supabaseConfigurationError} />
+  return <Village profile={profile} onLogout={signOut} />
 }
 export default App
