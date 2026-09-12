@@ -1,0 +1,1 @@
+export function Player({ position }) { return <div className="player" style={{ left: position.x, top: position.y }} aria-label="The player character"><span className="player-shadow" /><span className="player-hood" /><span className="player-face" /><span className="player-cloak" /></div> }
