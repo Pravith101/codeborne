@@ -28,6 +28,8 @@ export function GameWorld({ onInteract, dialogueOpen }) {
   const [playerPosition, setPlayerPosition] = useState(START_POSITION)
   const [viewport, setViewport] = useState({ width: window.innerWidth, height: window.innerHeight })
   const isNearby = Math.hypot(playerPosition.x - NPC.x, playerPosition.y - NPC.y) < 105
+  const gateCenter = { x: GATE.x + GATE.width / 2, y: GATE.y + GATE.height / 2 }
+  const isGateNearby = Math.hypot(playerPosition.x - gateCenter.x, playerPosition.y - gateCenter.y) < 140
   const cameraX = Math.max(0, Math.min(WORLD.width - viewport.width, playerPosition.x - viewport.width / 2 + WORLD.playerSize / 2))
   const cameraY = Math.max(0, Math.min(WORLD.height - viewport.height, playerPosition.y - viewport.height / 2 + WORLD.playerSize / 2))
 
@@ -35,12 +37,19 @@ export function GameWorld({ onInteract, dialogueOpen }) {
   useEffect(() => { resize(); window.addEventListener('resize', resize); return () => window.removeEventListener('resize', resize) }, [resize])
 
   useEffect(() => {
-    const down = (event) => { const key = event.key.toLowerCase(); if (moveKeys.has(key)) { event.preventDefault(); keysRef.current.add(key) } if (key === 'e' && isNearby && !dialogueOpen) { event.preventDefault(); onInteract() } }
+    const down = (event) => {
+      const key = event.key.toLowerCase();
+      if (moveKeys.has(key)) { event.preventDefault(); keysRef.current.add(key) }
+      if (key === 'e' && !dialogueOpen) {
+        if (isNearby) { event.preventDefault(); onInteract('npc'); }
+        else if (isGateNearby) { event.preventDefault(); onInteract('gate'); }
+      }
+    }
     const up = (event) => keysRef.current.delete(event.key.toLowerCase())
     const clear = () => keysRef.current.clear()
     window.addEventListener('keydown', down); window.addEventListener('keyup', up); window.addEventListener('blur', clear)
     return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up); window.removeEventListener('blur', clear) }
-  }, [dialogueOpen, isNearby, onInteract])
+  }, [dialogueOpen, isNearby, isGateNearby, onInteract])
 
   useEffect(() => {
     let frame
