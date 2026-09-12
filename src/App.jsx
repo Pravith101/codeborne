@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AuthScreen } from './features/auth/AuthScreen'
 import { useAuth } from './features/auth/useAuth'
