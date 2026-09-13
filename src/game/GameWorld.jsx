@@ -26,7 +26,9 @@ export function GameWorld({ onInteract, dialogueOpen, equippedCosmetics }) {
   const keysRef = useRef(new Set())
   const positionRef = useRef(START_POSITION)
   const lastFrame = useRef(null)
+  const directionRef = useRef('south')
   const [playerPosition, setPlayerPosition] = useState(START_POSITION)
+  const [playerDirection, setPlayerDirection] = useState('south')
   const [viewport, setViewport] = useState({ width: window.innerWidth, height: window.innerHeight })
   const isNearby = Math.hypot(playerPosition.x - NPC.x, playerPosition.y - NPC.y) < 105
   const gateCenter = { x: GATE.x + GATE.width / 2, y: GATE.y + GATE.height / 2 }
@@ -63,6 +65,22 @@ export function GameWorld({ onInteract, dialogueOpen, equippedCosmetics }) {
       if (!dialogueOpen && keysRef.current.size) {
         const left = keysRef.current.has('a') || keysRef.current.has('arrowleft'); const right = keysRef.current.has('d') || keysRef.current.has('arrowright'); const up = keysRef.current.has('w') || keysRef.current.has('arrowup'); const down = keysRef.current.has('s') || keysRef.current.has('arrowdown')
         const rawX = (right ? 1 : 0) - (left ? 1 : 0); const rawY = (down ? 1 : 0) - (up ? 1 : 0); const magnitude = Math.hypot(rawX, rawY) || 1
+        
+        let newDir = directionRef.current;
+        if (up && right) newDir = 'north-east';
+        else if (up && left) newDir = 'north-west';
+        else if (down && right) newDir = 'south-east';
+        else if (down && left) newDir = 'south-west';
+        else if (up) newDir = 'north';
+        else if (down) newDir = 'south';
+        else if (left) newDir = 'west';
+        else if (right) newDir = 'east';
+
+        if (newDir !== directionRef.current) {
+          directionRef.current = newDir;
+          setPlayerDirection(newDir);
+        }
+
         const current = positionRef.current; const x = Math.max(0, Math.min(WORLD.width - WORLD.playerSize, current.x + rawX * speed * delta / magnitude)); const y = Math.max(0, Math.min(WORLD.height - WORLD.playerSize, current.y + rawY * speed * delta / magnitude)); const next = { x: !isBlocked(x, current.y) ? x : current.x, y: !isBlocked(current.x, y) ? y : current.y }
         if (next.x !== current.x || next.y !== current.y) { positionRef.current = next; setPlayerPosition(next) }
       }
@@ -71,5 +89,5 @@ export function GameWorld({ onInteract, dialogueOpen, equippedCosmetics }) {
     frame = requestAnimationFrame(tick); return () => cancelAnimationFrame(frame)
   }, [dialogueOpen])
 
-  return <div ref={viewportRef} className="game-viewport" tabIndex="0" aria-label="Starting Village game world. Use WASD or arrow keys to move. Press E to interact with Eldra."><div className="world" style={{ width: WORLD.width, height: WORLD.height, transform: `translate3d(${-cameraX}px, ${-cameraY}px, 0)` }}><div className="world-label"><span>01</span><div><b>Starting Village</b><small>The Ashen Clearing</small></div></div><div className="path path-main" /><div className="path path-west" /><div className="path path-south" /><div className="path path-north" /><div className="pond" /><div className="fog fog-one" /><div className="fog fog-two" /><Building x={470} y={355} /><Building x={1015} y={520} variant="building-tall" /><Building x={1695} y={390} variant="building-wide" /><Building x={255} y={1050} variant="building-small" />{FLOWERS.map(([x, y], index) => <Flower key={`${x}-${y}`} x={x} y={y} variant={index % 3} />)}{SHRUBS.map(([x, y], index) => <Shrub key={`${x}-${y}`} x={x} y={y} variant={index % 2} />)}{TREES.map(([x, y], index) => <Tree key={`${x}-${y}`} x={x} y={y} variant={index % 3} />)}{ROCKS.map(([x, y]) => <Rock key={`${x}-${y}`} x={x} y={y} />)}<Campfire /><Gate /><Npc npc={NPC} isNearby={isNearby && !dialogueOpen} /><BossSprite x={BOSS.x} y={BOSS.y} isNearby={isBossNearby && !dialogueOpen} /><Player position={playerPosition} equippedCosmetics={equippedCosmetics} /></div></div>
+  return <div ref={viewportRef} className="game-viewport" tabIndex="0" aria-label="Starting Village game world. Use WASD or arrow keys to move. Press E to interact with Eldra."><div className="world" style={{ width: WORLD.width, height: WORLD.height, transform: `translate3d(${-cameraX}px, ${-cameraY}px, 0)` }}><div className="world-label"><span>01</span><div><b>Starting Village</b><small>The Ashen Clearing</small></div></div><div className="path path-main" /><div className="path path-west" /><div className="path path-south" /><div className="path path-north" /><div className="pond" /><div className="fog fog-one" /><div className="fog fog-two" /><Building x={470} y={355} /><Building x={1015} y={520} variant="building-tall" /><Building x={1695} y={390} variant="building-wide" /><Building x={255} y={1050} variant="building-small" />{FLOWERS.map(([x, y], index) => <Flower key={`${x}-${y}`} x={x} y={y} variant={index % 3} />)}{SHRUBS.map(([x, y], index) => <Shrub key={`${x}-${y}`} x={x} y={y} variant={index % 2} />)}{TREES.map(([x, y], index) => <Tree key={`${x}-${y}`} x={x} y={y} variant={index % 3} />)}{ROCKS.map(([x, y]) => <Rock key={`${x}-${y}`} x={x} y={y} />)}<Campfire /><Gate /><Npc npc={NPC} isNearby={isNearby && !dialogueOpen} /><BossSprite x={BOSS.x} y={BOSS.y} isNearby={isBossNearby && !dialogueOpen} /><Player position={playerPosition} direction={playerDirection} equippedCosmetics={equippedCosmetics} /></div></div>
 }
